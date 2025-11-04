@@ -1,0 +1,349 @@
+/** biome-ignore-all lint/suspicious/noUnknownAtRules: <RULES RELATED TO TAILWINDCSS> */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* --background: oklch(1 0 0); */
+  /* --foreground: oklch(0.145 0 0); */
+  --background: oklch(0.1398 0.0968 264.05);
+  --foreground: oklch(1 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+/*using in splash screen component for powered by cyrays text animation*/
+@keyframes glowPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px #f5c842) drop-shadow(0 0 20px rgba(255, 230, 100, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #ffe067) drop-shadow(0 0 32px rgba(255, 240, 150, 0.9));
+  }
+}
+/* === STRUCTURE === */
+.lamp-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* === LAMPS === */
+.stage-lamp {
+  position: relative;
+  width: 70px;
+  height: 38px;
+  border-radius: 10px 10px 5px 5px;
+  background: linear-gradient(
+    to bottom,
+    #1e1c14 0% /* top shadow */,
+    #3b321f 20% /* mid-body brass tone */,
+    #7a6032 60% /* main warm brass */,
+    #d7b46a 90% /* highlight edge */,
+    #f6e4b4 100% /* subtle light rim */
+  );
+  box-shadow:
+    inset 0 3px 6px rgba(255, 255, 255, 0.15), /* top reflection */
+    inset 0 -4px 10px rgba(0, 0, 0, 0.6), /* bottom shadow */
+    0 6px 16px rgba(0, 0, 0, 0.6); /* depth under lamp */
+  overflow: visible;
+  transition: all 0.8s ease;
+  z-index: 40;
+}
+
+/* === light “lens” glow === */
+.stage-lamp::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 239, 195, 0.9) 0% /* hot core */,
+    rgba(255, 220, 150, 0.5) 40%,
+    rgba(255, 190, 100, 0.15) 70%,
+    transparent 100%
+  );
+  opacity: 0.7;
+  filter: blur(3px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s ease;
+}
+
+/* === metallic top cap === */
+.stage-lamp::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #161616, #4a412a);
+  box-shadow:
+    0 3px 4px rgba(0, 0, 0, 0.7),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* === ON / OFF STATES === */
+.lamp-on {
+  filter: brightness(1.1);
+  box-shadow:
+    inset 0 3px 6px rgba(255, 255, 255, 0.25),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.6),
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(215, 180, 106, 0.5),
+    0 0 80px rgba(215, 180, 106, 0.25);
+}
+
+.lamp-on::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.1);
+}
+
+.lamp-off {
+  filter: brightness(0.5);
+}
+
+.lamp-off::after {
+  opacity: 0.2;
+  transform: translateX(-50%) scale(0.8);
+}
+
+/* === BEAMS (perfectly centered emission) === */
+.lamp-beam {
+  position: absolute;
+  top: 50%; /* middle of the lamp vertically */
+  left: 50%; /* center horizontally */
+  transform-origin: top center;
+  transform: translate(-50%, 0); /* align exactly under lamp center */
+  width: 42vw;
+  height: 95vh;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(215, 180, 106, 0.8) 0%,
+    rgba(215, 180, 106, 0.25) 35%,
+    rgba(215, 180, 106, 0.1) 70%,
+    transparent 100%
+  );
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  filter: blur(40px);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* exact symmetric rotations */
+.beam-left {
+  transform: translate(-50%, 0) rotate(-12deg);
+}
+.beam-right {
+  transform: translate(-50%, 0) rotate(12deg);
+}
+
+/* subtle lens glow where beam begins */
+.lamp-beam::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 20px;
+  height: 10px;
+  background: radial-gradient(circle, rgba(215, 180, 106, 0.9) 0%, transparent 80%);
+  transform: translateX(-50%);
+  filter: blur(4px);
+  opacity: 0.8;
+}
+
+/* === BEAM STATES === */
+.beam-on {
+  opacity: 1;
+  animation: flickerOn 1.3s ease-in-out 0.3s forwards;
+}
+.beam-off {
+  opacity: 0;
+}
+
+@keyframes flickerOn {
+  0%,
+  20%,
+  55%,
+  90%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  10%,
+  45%,
+  95% {
+    opacity: 0.5;
+    filter: brightness(0.7);
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .stage-lamp {
+    width: 65px;
+    height: 30px;
+  }
+
+  .lamp-beam {
+    width: 55vw;
+    height: 85vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    filter: blur(35px);
+  }
+
+  .beam-left {
+    transform: translate(-50%, 0) rotate(-10deg);
+  }
+  .beam-right {
+    transform: translate(-50%, 0) rotate(10deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .stage-lamp {
+    width: 55px;
+    height: 26px;
+  }
+
+  .lamp-beam {
+    width: 90vw;
+    height: 90vh;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    filter: blur(28px);
+  }
+
+  .beam-left {
+    transform: translate(-50%, 0) rotate(-9deg);
+  }
+  .beam-right {
+    transform: translate(-50%, 0) rotate(9deg);
+  }
+}
