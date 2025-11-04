@@ -44,7 +44,7 @@ export default function SplashScreen() {
 
   return (
     <div
-      className='fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-[#000030] text-center'
+      className='fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden bg-[#000030] text-center'
       ref={rootRef}
       style={{
         opacity: 1,

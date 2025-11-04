@@ -27,7 +27,7 @@ export function Hero() {
             rounded-xl border border-white/30
             text-white text-sm font-medium tracking-wide
             backdrop-blur-sm whitespace-nowrap
-            min-w-[240px]
+            min-w-60
             transition-all duration-300
             hover:bg-white/10 hover:border-white/60
             hover:shadow-[0_0_18px_rgba(255,255,255,0.2)]
@@ -40,7 +40,7 @@ export function Hero() {
             <span
               className='
                 absolute inset-x-0 bottom-0
-                h-px bg-gradient-to-r from-transparent via-white/70 to-transparent
+                h-px bg-linear-to-r from-transparent via-white/70 to-transparent
                 opacity-0 group-hover:opacity-100 transition-opacity duration-300
               '
             />
