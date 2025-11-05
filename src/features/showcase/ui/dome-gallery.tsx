@@ -808,7 +808,17 @@ export default function DomeGallery({
       pointer-events: auto;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-    }
+     box-shadow:
+    0 0 25px rgba(215, 180, 106, 0.5),
+    0 0 60px rgba(215, 180, 106, 0.35);
+  border: 1px solid rgba(215, 180, 106, 0.8);
+}
+
+.item__image:hover {
+  box-shadow:
+    0 0 35px rgba(215, 180, 106, 0.7),
+    0 0 90px rgba(215, 180, 106, 0.5);
+}
     .item__image--reference {
       position: absolute;
       inset: 10px;
@@ -840,6 +850,33 @@ export default function DomeGallery({
             touchAction: 'pan-y pinch-zoom',
           }}
         >
+          {/*  Dome Shell (background aura) */}
+          <div className='absolute inset-0 z-0 pointer-events-none flex items-center justify-center'>
+            <div
+              className='
+      rounded-full
+      dome-shell
+      transition-all
+      duration-700
+      ease-out
+    '
+              style={{
+                width: 'min(90vmin, 110%)',
+                aspectRatio: '1',
+                background:
+                  'radial-gradient(circle at 50% 45%, rgba(215,180,106,0.1) 0%, rgba(15,15,15,0.5) 55%, rgba(0,0,0,0.85) 100%)',
+                boxShadow: `
+        0 0 160px rgba(215,180,106,0.15),
+        0 0 280px rgba(215,180,106,0.1),
+        inset 0 0 250px rgba(0,0,0,0.75)
+      `,
+                opacity: 0.85,
+                filter: 'blur(2px)',
+                mixBlendMode: 'screen',
+                transform: 'translateZ(-50px)',
+              }}
+            ></div>
+          </div>
           <div className='stage'>
             <div className='sphere' ref={sphereRef}>
               {items.map((it, i) => {
@@ -892,35 +929,6 @@ export default function DomeGallery({
               })}
             </div>
           </div>
-
-          {/* <div
-            className='absolute inset-0 m-auto z-[3] pointer-events-none'
-            style={{
-              backgroundImage: `radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`,
-            }}
-          />
-
-          <div
-            className='absolute inset-0 m-auto z-[3] pointer-events-none'
-            style={{
-              WebkitMaskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              maskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              backdropFilter: 'blur(3px)',
-            }}
-          />
-
-          <div
-            className='absolute left-0 right-0 top-0 h-[120px] z-[5] pointer-events-none rotate-180'
-            style={{
-              background: `linear-gradient(to bottom, transparent, var(--overlay-blur-color, ${overlayBlurColor}))`,
-            }}
-          />
-          <div
-            className='absolute left-0 right-0 bottom-0 h-[120px] z-[5] pointer-events-none'
-            style={{
-              background: `linear-gradient(to bottom, transparent, var(--overlay-blur-color, ${overlayBlurColor}))`,
-            }}
-          /> */}
 
           <div
             className='absolute inset-0 z-20 pointer-events-none flex items-center justify-center'

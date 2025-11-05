@@ -1,59 +1,100 @@
 'use client'
 
 import { motion, useInView } from 'motion/react'
-import { useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import AnimatedSlogan from '@/app/_components/animated-slogan'
 
 export default function StageReveal() {
-  const sectionRef = useRef(null)
-  const logoRef = useRef(null)
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const logoRef = useRef<HTMLImageElement | null>(null)
+  const lampRefs = useRef<Array<HTMLDivElement | null>>([])
   const isLogoInView = useInView(logoRef, { amount: 0.45 })
 
-  const lampPairs = [
-    { id: 1, class: 'beam-l1', rotate: -25 },
+  // === Geometry-based auto-aim ===
+  useLayoutEffect(() => {
+    const updateAim = () => {
+      const logo = logoRef.current
+      if (!logo) return
+      const logoRect = logo.getBoundingClientRect()
+      const logoX = logoRect.left + logoRect.width / 2
+      const logoY = logoRect.top + logoRect.height / 2
 
-    { id: 4, class: 'beam-l4', rotate: -5 },
-    { id: 5, class: 'beam-r1', rotate: 5 },
+      lampRefs.current.forEach((groupEl) => {
+        if (!groupEl) return
+        const lampEl = groupEl.querySelector('.stage-lamp') as HTMLElement | null
+        if (!lampEl) return
 
-    { id: 8, class: 'beam-r4', rotate: 25 },
-  ]
+        const lampRect = lampEl.getBoundingClientRect()
+        const originX = lampRect.left + lampRect.width / 2
+        const originY = lampRect.top + lampRect.height * 0.55
+
+        const dx = logoX - originX
+        const dy = logoY - originY
+        const deg = (Math.atan2(dy, dx) * 180) / Math.PI
+
+        groupEl.style.setProperty('--aim', `${deg}deg`)
+        // rotate lamp slightly less than beam for realism
+        groupEl.style.setProperty('--lamp-tilt', `${deg - 90}deg`)
+      })
+    }
+
+    const handle = () => requestAnimationFrame(updateAim)
+    updateAim()
+
+    window.addEventListener('resize', handle)
+    window.addEventListener('scroll', handle, { passive: true })
+    const ro = new ResizeObserver(handle)
+    if (sectionRef.current) ro.observe(sectionRef.current)
+
+    return () => {
+      window.removeEventListener('resize', handle)
+      window.removeEventListener('scroll', handle)
+      ro.disconnect()
+    }
+  }, [])
 
   return (
     <section
       className='relative flex flex-col items-center justify-evenly my-4 overflow-hidden min-h-screen'
       ref={sectionRef}
     >
-      {/* SLOGAN */}
+      {/* --- SLOGAN --- */}
       <AnimatedSlogan />
 
-      {/* 4 LAMPS */}
+      {/* --- LAMPS ROW --- */}
       <motion.div
-        className='relative flex justify-between w-full max-w-[1300px] px-[10%] z-30 pointer-events-none flex-wrap gap-x-4'
+        className='absolute inset-x-0 top-[45%] md:top-[30%] lg:top-[28%] lg:left-[12%] lg:right-[12%] z-30 pointer-events-none flex justify-between px-[10%] sm:px-[8%] md:px-[12%]'
         initial={{ opacity: 0, y: -30 }}
         transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         viewport={{ once: true, amount: 0.3 }}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        {lampPairs.map((lamp) => (
-          <div className='lamp-group' key={lamp.id}>
+        {['left', 'right'].map((side, i) => (
+          <div
+            className='lamp-group'
+            key={side}
+            ref={(el) => {
+              lampRefs.current[i] = el
+            }}
+          >
             <div className={`stage-lamp ${isLogoInView ? 'lamp-on' : 'lamp-off'}`} />
-            <div
-              className={`lamp-beam ${lamp.class} ${isLogoInView ? 'beam-on' : 'beam-off'}`}
-              style={{ transform: `translate(-50%, 0) rotate(${lamp.rotate}deg)` }}
-            />
+            <div className={`lamp-beam ${isLogoInView ? 'beam-on' : 'beam-off'}`} />
           </div>
         ))}
       </motion.div>
 
-      {/* LOGO */}
-      {/** biome-ignore lint: false positive */}
+      {/* --- LOGO --- */}
+      {/* biome-ignore lint: false positive */}
       <motion.img
         alt='Northman Logo'
-        animate={{ opacity: isLogoInView ? 1 : 0, scale: isLogoInView ? 1 : 0.9 }}
-        className='relative z-40 mt-42 md:mt-32 lg:mt-48 lg:mb-8 w-[360px] object-contain pointer-events-none select-none'
+        animate={{
+          opacity: isLogoInView ? 1 : 0,
+          scale: isLogoInView ? 1 : 0.9,
+        }}
+        className='relative z-40 mt-32 lg:mt-48 lg:mb-8 w-[360px] object-contain pointer-events-none select-none'
         initial={{ opacity: 0, scale: 0.9 }}
         ref={logoRef}
-        src='/logo.png'
+        src='/logo-golden.png'
         transition={{ duration: 1.2, ease: 'easeOut' }}
       />
 

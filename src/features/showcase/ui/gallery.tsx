@@ -14,6 +14,9 @@ export default function Gallery() {
 
   return (
     <div className='flex flex-col items-center justify-center w-full'>
+      <div className='md:mt-8 md:mb-16 w-[99vw] h-screen'>
+        <DomeGallery images={DOME_IMAGES} selectedCollection={collection} selectedStyle={style} />
+      </div>
       <GallerySort
         onChange={(s, c) => {
           setStyle(s)
@@ -22,9 +25,6 @@ export default function Gallery() {
         selectedCollection={collection}
         selectedStyle={style}
       />
-      <div className=' lg:mt-12 w-[99vw] h-[100vh]'>
-        <DomeGallery images={DOME_IMAGES} selectedCollection={collection} selectedStyle={style} />
-      </div>
     </div>
   )
 }

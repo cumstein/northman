@@ -140,99 +140,110 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  transition: transform 0.2s linear;
 }
 
-/* LIGHT SOURCE */
 .stage-lamp {
   position: relative;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.95) 0% /* intense white core */,
-    rgba(255, 255, 255, 0.5) 30% /* glow spread */,
-    rgba(255, 255, 255, 0.15) 70% /* soft falloff */,
-    transparent 100%
-  );
-  filter: blur(12px);
+  width: clamp(42px, 4.8vw, 68px); /* smaller overall */
+  height: clamp(26px, 3vw, 44px); /* proportional height */
+  border-radius: 12px;
+  background: linear-gradient(160deg, #0a0a0a 0%, #1d1d1d 25%, #2b2b2b 50%, #121212 75%, #000 100%);
   box-shadow:
-    0 0 40px rgba(255, 255, 255, 0.8),
-    0 0 100px rgba(255, 255, 255, 0.5),
-    0 0 180px rgba(255, 255, 255, 0.3);
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.7),
+    0 6px 14px rgba(0, 0, 0, 0.6);
+  transform: rotate(var(--lamp-tilt));
+  z-index: 50;
   transition:
-    opacity 0.6s ease,
+    filter 0.8s ease,
     transform 0.6s ease;
-  z-index: 40;
-  opacity: 0.8;
+  overflow: visible;
 }
 
+/* === YOKE / MOUNTING HANDLE === */
+.stage-lamp::before {
+  content: "";
+  position: absolute;
+  top: -10px; /* closer to body */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%; /* slightly narrower */
+  height: 8px;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #191919, #050505);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.08),
+    0 3px 6px rgba(0, 0, 0, 0.6);
+}
+/* === ON / OFF STATES === */
 .lamp-on {
-  opacity: 1;
-  transform: scale(1.1);
-  filter: blur(14px);
+  filter: brightness(1.1);
+  box-shadow:
+    inset 0 3px 6px rgba(255, 255, 255, 0.25),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.6),
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(215, 180, 106, 0.5),
+    0 0 80px rgba(215, 180, 106, 0.25);
 }
 
 .lamp-off {
-  opacity: 0.01;
-  transform: scale(0.9);
-  filter: blur(10px);
+  filter: brightness(0.5);
+  opacity: 0.2;
 }
 
-/* === BEAMS === */
+/* Beam */
 .lamp-beam {
   position: absolute;
-  top: 40%;
+  top: 60%;
   left: 50%;
   transform-origin: top center;
-  transform: translate(-50%, 0);
-  width: 60vw;
-  height: 75vh;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.65) 20%,
-    rgba(255, 255, 230, 0.28) 55%,
-    rgba(255, 255, 230, 0.08) 100%
-  );
+  transform: translate(-50%, 0) rotate(var(--lamp-tilt));
 
+  width: 40vw;
+  height: 100vh;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-
-  -webkit-mask-image:
-    radial-gradient(
-      ellipse at 50% 35%,
-      rgba(0, 0, 0, 1) 40%,
-      rgba(0, 0, 0, 0.85) 58%,
-      rgba(0, 0, 0, 0.45) 80%,
-      transparent 100%
-    ), linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.75) 6%, rgba(0, 0, 0, 1) 18%);
-  mask-image:
-    radial-gradient(
-      ellipse at 50% 35%,
-      rgba(0, 0, 0, 1) 40%,
-      rgba(0, 0, 0, 0.85) 58%,
-      rgba(0, 0, 0, 0.45) 80%,
-      transparent 100%
-    ), linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.75) 6%, rgba(0, 0, 0, 1) 18%);
-  -webkit-mask-composite: intersect;
-  mask-composite: intersect;
-
-  filter: blur(80px);
   mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity 0.7s ease;
-  will-change: opacity, filter, transform;
-}
+  transition:
+    opacity 0.6s ease,
+    transform 0.2s linear;
 
-.beam-left {
-  transform: translate(-50%, 0) rotate(-12deg);
-}
-.beam-right {
-  transform: translate(-50%, 0) rotate(12deg);
-}
+  /* === multi-layered volumetric lighting === */
+  /* 1. Core intense light */
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255, 240, 200, 0.85) 5%,
+      rgba(255, 220, 160, 0.45) 12%,
+      transparent 35%
+    ), /* 2. Warm main cone */
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(215, 180, 106, 0.2) 0%,
+      rgba(215, 180, 106, 0.015) 25%,
+      rgba(215, 180, 106, 0.015) 45%,
+      transparent 70%
+    ), /* 3. Subtle amber haze */
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(230, 195, 130, 0.015) 10%,
+      rgba(215, 180, 106, 0.015) 40%,
+      transparent 65%
+    ), /* 4. Diffuse fog overlap */
+    radial-gradient(ellipse at 50% 0%, rgba(255, 250, 220, 0.015) 30%, transparent 70%),
+    /* 5. Faint outer spill */
+    radial-gradient(ellipse at 50% 0%, rgba(255, 240, 200, 0.015) 50%, transparent 90%),
+    /* 6. Ambient golden haze */
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(215, 180, 106, 0.015) 40%,
+      rgba(215, 180, 106, 0.015) 75%,
+      transparent 100%
+    ), /* 7. Final global fade envelope */
+    radial-gradient(ellipse at 50% 0%, rgba(255, 240, 200, 0.05) 25%, transparent 100%);
 
-.lamp-beam::before {
-  content: none;
+  filter: blur(36px) saturate(1.1);
 }
 
 /* === BEAM STATES === */
@@ -261,38 +272,17 @@
     filter: brightness(0.8);
   }
 }
-
-/* === RESPONSIVE === */
 @media (max-width: 1024px) {
-  .stage-lamp {
-    width: 40px;
-    height: 40px;
-  }
   .lamp-beam {
-    width: 120vw;
-    height: 80vh;
-  }
-  .beam-left {
-    transform: translate(-50%, 0) rotate(-10deg);
-  }
-  .beam-right {
-    transform: translate(-50%, 0) rotate(10deg);
+    width: 80vw;
+    height: 70vh;
+    filter: blur(35px);
   }
 }
-
-@media (max-width: 768px) {
-  .stage-lamp {
-    width: 40px;
-    height: 40px;
-  }
+@media (max-width: 767px) {
   .lamp-beam {
-    width: 180vw;
+    width: 150vw;
     height: 70vh;
-  }
-  .beam-left {
-    transform: translate(-50%, 0) rotate(-9deg);
-  }
-  .beam-right {
-    transform: translate(-50%, 0) rotate(9deg);
+    filter: blur(28px);
   }
 }
