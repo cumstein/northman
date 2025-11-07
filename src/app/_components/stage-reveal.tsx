@@ -9,9 +9,13 @@ export default function StageReveal() {
   const logoRef = useRef<HTMLImageElement | null>(null)
   const lampRefs = useRef<Array<HTMLDivElement | null>>([])
   const isLogoInView = useInView(logoRef, { amount: 0.45 })
+  const isSectionInView = useInView(sectionRef, { amount: 0.15 })
 
   // === Geometry-based auto-aim ===
   useLayoutEffect(() => {
+    if (!isSectionInView) return
+
+    const lastAngles = new WeakMap<HTMLElement, number>()
     const updateAim = () => {
       const logo = logoRef.current
       if (!logo) return
@@ -32,8 +36,12 @@ export default function StageReveal() {
         const dy = logoY - originY
         const deg = (Math.atan2(dy, dx) * 180) / Math.PI
 
+        // Skip tiny changes to avoid style thrash on scroll
+        const prev = lastAngles.get(groupEl as HTMLElement) ?? Number.NaN
+        if (Number.isFinite(prev) && Math.abs(prev - deg) < 0.5) return
+        lastAngles.set(groupEl as HTMLElement, deg)
+
         groupEl.style.setProperty('--aim', `${deg}deg`)
-        // rotate lamp slightly less than beam for realism
         groupEl.style.setProperty('--lamp-tilt', `${deg - 90}deg`)
       })
     }
@@ -51,13 +59,35 @@ export default function StageReveal() {
       window.removeEventListener('scroll', handle)
       ro.disconnect()
     }
-  }, [])
+  }, [isSectionInView])
 
   return (
     <section
-      className='relative flex flex-col items-center justify-evenly my-4 overflow-hidden min-h-screen'
+      className='relative flex flex-col items-center justify-evenly my-0 overflow-hidden h-screen'
       ref={sectionRef}
     >
+      {/* --- ENVIRONMENT BACKDROP --- */}
+      <div aria-hidden className='stage-environment'>
+        <div className='stage-backdrop stage-backdrop--gradient' />
+        <div className='stage-backdrop stage-backdrop--bokeh' />
+        <div className='stage-truss'>
+          <div className='stage-truss__beam' />
+          <div className='stage-truss__support stage-truss__support--left' />
+          <div className='stage-truss__support stage-truss__support--right' />
+          <div className='stage-truss__rig stage-truss__rig--left' />
+          <div className='stage-truss__rig stage-truss__rig--right' />
+        </div>
+        <motion.div
+          aria-hidden
+          animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
+          className='stage-particles'
+          transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+        />
+        <div className='stage-haze stage-haze--left' />
+        <div className='stage-haze stage-haze--center' />
+        <div className='stage-haze stage-haze--right' />
+      </div>
+
       {/* --- SLOGAN --- */}
       <AnimatedSlogan />
 
@@ -84,25 +114,50 @@ export default function StageReveal() {
       </motion.div>
 
       {/* --- LOGO --- */}
-      {/* biome-ignore lint: false positive */}
-      <motion.img
-        alt='Northman Logo'
-        animate={{
-          opacity: isLogoInView ? 1 : 0,
-          scale: isLogoInView ? 1 : 0.9,
-        }}
-        className='relative z-40 mt-32 lg:mt-48 lg:mb-8 w-[360px] object-contain pointer-events-none select-none'
-        initial={{ opacity: 0, scale: 0.9 }}
-        ref={logoRef}
-        src='/logo-golden.png'
-        transition={{ duration: 1.2, ease: 'easeOut' }}
-      />
+      <div className='stage-logo-wrapper'>
+        {/* biome-ignore lint: false positive */}
+        <motion.img
+          alt='Northman Logo'
+          animate={{
+            opacity: isLogoInView ? 1 : 0,
+            scale: isLogoInView ? 1 : 0.9,
+          }}
+          className='stage-logo'
+          initial={{ opacity: 0, scale: 0.9 }}
+          ref={logoRef}
+          src='/logo-golden.png'
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+        />
+        <motion.img
+          alt='Northman Logo reflection'
+          animate={{
+            opacity: isLogoInView ? 0.4 : 0,
+            scale: isLogoInView ? 1 : 0.94,
+          }}
+          aria-hidden
+          className='stage-logo stage-logo--reflection'
+          initial={{ opacity: 0, scale: 0.94 }}
+          src='/logo-golden.png'
+          transition={{ duration: 1.4, ease: 'easeOut', delay: 0.15 }}
+        />
+      </div>
 
       {/* BLOOM */}
-      <div className='absolute bottom-[12%] left-1/2 -translate-x-1/2 w-[300px] h-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,220,0.45)_0%,rgba(215,180,106,0.15)_55%,transparent_100%)] blur-[80px] opacity-80 pointer-events-none z-20' />
+      <div className='stage-bloom' />
 
       {/* GLOW */}
-      <div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] h-48 rounded-full bg-[#d7b46a]/25 blur-[120px] opacity-70' />
+      <div className='stage-floor-light' />
+
+      {/* FLOOR & ATMOSPHERE */}
+      <div aria-hidden className='stage-floor'>
+        <div className='stage-floor__surface' />
+        <div className='stage-floor__edge' />
+        <motion.div
+          animate={{ backgroundPositionX: ['0%', '100%'] }}
+          className='stage-floor__sheen'
+          transition={{ duration: 12, repeat: Infinity, repeatType: 'mirror', ease: 'linear' }}
+        />
+      </div>
     </section>
   )
 }

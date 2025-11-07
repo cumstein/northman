@@ -38,7 +38,7 @@ export default function AnimatedSlogan() {
 
   return (
     <motion.section
-      className='w-full text-center text-white overflow-hidden'
+      className='w-full text-center text-white overflow-hidden z-9998'
       initial='hidden'
       variants={container}
       viewport={{ once: true, amount: 0.4 }}
